@@ -74,7 +74,7 @@ const App = () => {
           <div className="lg:col-span-2 space-y-6">
             <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-semibold">Assessments</h2>
+                <h2 className="text-lg font-semibold">Coursework</h2>
                 <button 
                   onClick={addComponent}
                   className="flex items-center gap-2 bg-indigo-50 text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-indigo-100 transition-colors text-sm"
@@ -183,7 +183,7 @@ const App = () => {
 
               <div className="mt-6 pt-6 border-t border-white/20 space-y-3">
                 <div className="flex justify-between text-xs">
-                  <span className="opacity-70 uppercase font-bold">Current Contribution:</span>
+                  <span className="opacity-70 uppercase font-bold">Coursework Marks:</span>
                   <span className="font-bold">{currentWeightedScore.toFixed(2)}%</span>
                 </div>
                 <div className="flex justify-between text-xs">
