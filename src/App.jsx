@@ -252,7 +252,7 @@ const App = () => {
                     <tr>
                       <th className="px-3 py-2">Marks</th>
                       <th className="px-3 py-2">Grade</th>
-                      <th className="px-3 py-2">GP</th>
+                      <th className="px-3 py-2">GPA</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -267,7 +267,7 @@ const App = () => {
                 </table>
               </div>
               <p className="mt-4 text-[10px] text-slate-400 italic leading-tight">
-                * Based on standard academic grading benchmarks.
+                * Based on TARUMT grading scheme.
               </p>
             </section>
           </div>
