@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Calculator, Target, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2, Calculator, Target, AlertCircle, CheckCircle2, List } from 'lucide-react';
 
 const App = () => {
   const [targetGrade, setTargetGrade] = useState(80);
@@ -8,6 +8,19 @@ const App = () => {
     { id: 1, name: 'Mid Term', weight: 20, score: 100, total: 100 },
     { id: 2, name: 'Assignment', weight: 30, score: 100, total: 100 },
   ]);
+
+  // Grading Scale Reference Data
+  const gradingScale = [
+    { range: '90 - 100', grade: 'A+', gp: '4.00' },
+    { range: '80 - 89', grade: 'A', gp: '4.00' },
+    { range: '75 - 79', grade: 'A-', gp: '3.67' },
+    { range: '70 - 74', grade: 'B+', gp: '3.33' },
+    { range: '65 - 69', grade: 'B', gp: '3.00' },
+    { range: '60 - 64', grade: 'B-', gp: '2.67' },
+    { range: '55 - 59', grade: 'C+', gp: '2.33' },
+    { range: '50 - 54', grade: 'C', gp: '2.00' },
+    { range: '0 - 49', grade: 'F', gp: '0.00' },
+  ];
 
   // Actions
   const addComponent = () => {
@@ -226,6 +239,37 @@ const App = () => {
                 </p>
               </div>
             )}
+
+            {/* Grading Scale Reference Table */}
+            <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+              <div className="flex items-center gap-2 mb-4 text-slate-400">
+                <List size={18} />
+                <h3 className="text-xs font-bold uppercase tracking-wider">Grading Scale Reference</h3>
+              </div>
+              <div className="overflow-hidden rounded-xl border border-slate-100">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 text-slate-500 font-bold border-b border-slate-100">
+                    <tr>
+                      <th className="px-3 py-2">Marks</th>
+                      <th className="px-3 py-2">Grade</th>
+                      <th className="px-3 py-2">GP</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {gradingScale.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-3 py-2 text-slate-600 whitespace-nowrap">{row.range}</td>
+                        <td className="px-3 py-2 font-semibold text-slate-900">{row.grade}</td>
+                        <td className="px-3 py-2 text-slate-500">{row.gp}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-4 text-[10px] text-slate-400 italic leading-tight">
+                * Based on standard academic grading benchmarks.
+              </p>
+            </section>
           </div>
         </div>
       </div>
