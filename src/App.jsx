@@ -5,17 +5,18 @@ const App = () => {
   const [targetGrade, setTargetGrade] = useState(80);
   const [finalWeight, setFinalWeight] = useState(50);
   const [components, setComponents] = useState([
-    { id: 1, name: 'Mid Term', weight: 20, score: '', total: 100 },
-    { id: 2, name: 'Assignment', weight: 30, score: '', total: 100 },
+    { id: 1, name: 'Mid Term', weight: 20, score: 100, total: 100 },
+    { id: 2, name: 'Assignment', weight: 30, score: 100, total: 100 },
   ]);
 
+  // Actions
   const addComponent = () => {
     const newId = components.length > 0 ? Math.max(...components.map(c => c.id)) + 1 : 1;
     setComponents([...components, { 
       id: newId, 
       name: `Assessment ${newId}`, 
       weight: 10, 
-      score: '', 
+      score: '', // Newly added components default to empty
       total: 100 
     }]);
   };
@@ -33,7 +34,7 @@ const App = () => {
     }));
   };
 
-  // Helper to treat empty strings as 0 for calculations
+  // Calculation Logic
   const safeVal = (val) => {
     const parsed = parseFloat(val);
     return isNaN(parsed) ? 0 : parsed;
@@ -42,17 +43,14 @@ const App = () => {
   const totalCourseworkWeight = components.reduce((sum, c) => sum + safeVal(c.weight), 0);
   const totalWeight = totalCourseworkWeight + safeVal(finalWeight);
   
-  // Calculate current points contributed to the overall grade
   const currentWeightedScore = components.reduce((sum, c) => {
     const weight = safeVal(c.weight);
     const score = safeVal(c.score);
-    const total = safeVal(c.total) || 1; // Prevent division by zero
+    const total = safeVal(c.total) || 1;
     return sum + ((score / total) * weight);
   }, 0);
 
   const finalWeightVal = safeVal(finalWeight);
-  
-  // Final is now always out of 100%
   const percentageNeededOnFinal = finalWeightVal > 0 
     ? ((safeVal(targetGrade) - currentWeightedScore) / (finalWeightVal / 100))
     : 0;
