@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { Plus, Trash2, Calculator, Target, AlertCircle, CheckCircle2, List } from 'lucide-react';
 
 const App = () => {
+  // Application State
   const [targetGrade, setTargetGrade] = useState(80);
   const [finalWeight, setFinalWeight] = useState(50);
+  const [useRatioMode, setUseRatioMode] = useState(false);
+  const [courseworkRatio, setCourseworkRatio] = useState(50);
+  
+  // Defaulting initial assessments to 100
   const [components, setComponents] = useState([
     { id: 1, name: 'Mid Term', weight: 20, score: 100, total: 100 },
     { id: 2, name: 'Assignment', weight: 30, score: 100, total: 100 },
@@ -54,14 +59,24 @@ const App = () => {
   };
 
   const totalCourseworkWeight = components.reduce((sum, c) => sum + safeVal(c.weight), 0);
-  const totalWeight = totalCourseworkWeight + safeVal(finalWeight);
   
-  const currentWeightedScore = components.reduce((sum, c) => {
+  // Total weight adapts based on whether Global Ratio mode is on
+  const totalWeight = useRatioMode 
+    ? safeVal(courseworkRatio) + safeVal(finalWeight)
+    : totalCourseworkWeight + safeVal(finalWeight);
+  
+  // Calculate the raw internal coursework points
+  const rawCurrentWeightedScore = components.reduce((sum, c) => {
     const weight = safeVal(c.weight);
     const score = safeVal(c.score);
     const total = safeVal(c.total) || 1;
     return sum + ((score / total) * weight);
   }, 0);
+
+  // If Ratio Mode is on, normalize coursework to the chosen global ratio
+  const currentWeightedScore = useRatioMode && totalCourseworkWeight > 0
+    ? (rawCurrentWeightedScore / totalCourseworkWeight) * safeVal(courseworkRatio)
+    : rawCurrentWeightedScore;
 
   const finalWeightVal = safeVal(finalWeight);
   const percentageNeededOnFinal = finalWeightVal > 0 
@@ -153,8 +168,31 @@ const App = () => {
             </section>
 
             <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-              <h2 className="text-lg font-semibold mb-6">Final Exam & Target</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg font-semibold">Final Exam & Target</h2>
+                <label className="flex items-center gap-2 cursor-pointer text-sm font-medium text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 transition-colors">
+                  <input 
+                    type="checkbox" 
+                    checked={useRatioMode}
+                    onChange={(e) => setUseRatioMode(e.target.checked)}
+                    className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
+                  />
+                  Use Global Ratio
+                </label>
+              </div>
+              <div className={`grid grid-cols-1 ${useRatioMode ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-6`}>
+                {useRatioMode && (
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Coursework Ratio (%)</label>
+                    <input 
+                      type="number" 
+                      value={courseworkRatio}
+                      onFocus={handleFocus}
+                      onChange={(e) => setCourseworkRatio(e.target.value)}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+                    />
+                  </div>
+                )}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">Final Weight (%)</label>
                   <input 
@@ -196,7 +234,7 @@ const App = () => {
 
               <div className="mt-6 pt-6 border-t border-white/20 space-y-3">
                 <div className="flex justify-between text-xs">
-                  <span className="opacity-70 uppercase font-bold">Coursework Marks:</span>
+                  <span className="opacity-70 uppercase font-bold">Current Contribution:</span>
                   <span className="font-bold">{currentWeightedScore.toFixed(2)}%</span>
                 </div>
                 <div className="flex justify-between text-xs">
